@@ -1,5 +1,5 @@
 "use client"
-import { z } from "zod";
+import {  z } from "zod";
 import { useToast } from "@/components/ui/use-toast"
 import React ,{useState , useTransition} from 'react'
 import { Label } from "../ui/label";
@@ -10,7 +10,20 @@ import Link from "next/link";
 
 
 export default function Register() {
-    const register =api.auth.makeNewUser.useMutation()
+    const register =api.auth.makeNewUser.useMutation({
+        onSuccess:(date)=>{
+            if(date?.error){
+                toast({
+                    variant: "destructive",
+                    title:"Error",
+                    description: date.error
+                   
+                  })
+
+            }
+
+        }
+    })
     const { toast } = useToast()
     const [isPending, startTransition] = useTransition();
     const  [user ,setNewUser] = useState({
@@ -57,14 +70,7 @@ export default function Register() {
                 }
                 if(register.data){
                     console.log("register", register.data)
-                    if(register.data?.error){
-                        toast({
-                            variant: "destructive",
-                            description: register.data?.error
-                           
-                          })
-
-                    }
+                    
                     
 
 
