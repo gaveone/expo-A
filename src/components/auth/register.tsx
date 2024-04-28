@@ -48,7 +48,7 @@ export default function Register() {
       }); 
 
 
-      function registerFormSubmet() {
+      function registerFormSubmit() {
         const validUser = registerForm.safeParse(user)
         startTransition(()=>{
             if(validUser.error?.errors){
@@ -58,9 +58,7 @@ export default function Register() {
                         variant: "destructive",
                         title:error.path[0]?.toString(),
                         description: error.message,
-                       
                       })
-
                 })
 
             }else{
@@ -70,15 +68,7 @@ export default function Register() {
                 if(register.data){
                     console.log("register", register.data)
                 }
-               
-
-
-
-
-
             }
-           
-        
         })
        
       }
@@ -111,7 +101,7 @@ export default function Register() {
         <Input className=" relative w-96" value={user.confirmPassword}   name="confirmPassword" id="confirmPassword" placeholder="confirm Password" onChange={(e)=>{setNewUser(preNewUser  =>{return{...preNewUser ,[e.target.name]:e.target.value}})} }/>
     </div>
 
-    <Button disabled={isPending} className=" relative w-48"  onClick={registerFormSubmet}> Register</Button>
+    <Button disabled={isPending} className=" relative w-48"  onClick={registerFormSubmit}> Register</Button>
     <Link href={"/auth/login"}>
         <Button variant={"link"}>login</Button>
     </Link>

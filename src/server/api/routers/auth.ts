@@ -38,6 +38,24 @@ export const authRouter = createTRPCRouter({
         }
 
 
+    }),
+    findUser:publicProcedure.input(z.object({
+        email:z.string().min(1, { message: "This field has to be filled." }).email("This is not a valid email.")
+    })).query(async({ ctx ,input}) =>{
+        return ctx.db.user.findUnique({where:{email:input.email}})
+    }),
+
+    
+    findUserValidation:publicProcedure.input(z.object({
+        email:z.string().min(1, { message: "This field has to be filled." }).email("This is not a valid email."),
+        password:z.string(),
+
+    })).mutation(async({ ctx ,input}) =>{
+        const FoundUser = await ctx.db.user.findUnique({where:{email:input.email}})
+        if(!FoundUser){return {error:"user Does not exist"}}
+        const CheckPassword = await bcrypt.compare(input.password ,FoundUser.password)
+        if(!CheckPassword){return{error:"user Does not exist"}}
+        return{data:input}
     })
  
 });

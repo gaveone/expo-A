@@ -7,9 +7,31 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { api } from "@/trpc/react";
 import Link from "next/link";
+import { signIn } from "next-auth/react"
+
 function Login() {
     const { toast } = useToast()
     const [isPending, startTransition] = useTransition();
+    const ValidationUser = api.auth.findUserValidation.useMutation({
+        onSuccess: (error) => {
+            if(error){
+                toast({
+                    variant: "destructive",
+                    title:"Error",
+                    description: error.error,
+                   
+                  })
+            }
+            if(error.data){
+                const user = error.data
+                 signIn('credentials', {  
+                    email:user.email, 
+                    password: user.password
+                })
+            }
+
+        }
+    })
     const  [user ,setNewUser] = useState({
        
         email:"",
@@ -24,29 +46,30 @@ function Login() {
     })
 
 
-    function registerFormSubmet() {
-        console.log(user)
+    async function registerFormSubmet() {  
+        console.log("1")
         const validUser = loginForm.safeParse(user)
-        startTransition(()=>{
-            if(validUser.error?.errors){
+        if(validUser.error?.errors){
+            console.log("2")
 
-                validUser.error?.errors.forEach(error =>{
-                    toast({
-                        variant: "destructive",
-                        title:error.path[0]?.toString(),
-                        description: error.message,
-                       
-                      })
+            validUser.error?.errors.forEach(error =>{
+                console.log("3-E")
+                toast({
+                    variant: "destructive",
+                    title:error.path[0]?.toString(),
+                    description: error.message,
+                   
+                  })
 
-                })
+            })
 
-            }else{
+        }else{
+            console.log("4")
+            const Data = validUser.data   
+            if(Data){ValidationUser.mutate(Data) } 
+          
 
-
-            }
-           
-        
-        })
+        }
        
       }
   return (
@@ -62,7 +85,7 @@ function Login() {
     </div>
 
 
-    <Button disabled={isPending} className=" relative w-48"  onClick={registerFormSubmet}> Register</Button>
+    <Button disabled={isPending} className=" relative w-48"  onClick={ (e)=>{e.preventDefault();registerFormSubmet()}}> Register</Button>
     <Link href={"/auth/register"}>
         <Button variant={"link"}>register</Button>
     </Link>
