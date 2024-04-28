@@ -69,10 +69,6 @@ export default function Register() {
                 }
                 if(register.data){
                     console.log("register", register.data)
-                    
-                    
-
-
                 }
                
 
