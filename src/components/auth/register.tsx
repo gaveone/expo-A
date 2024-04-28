@@ -19,7 +19,6 @@ export default function Register() {
                     description: date.error
                    
                   })
-
             }
 
         }
