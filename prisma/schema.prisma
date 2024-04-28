@@ -14,9 +14,24 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
+model Image{
+    id            String    @id @default(cuid())
+    img String
+    product Product @relation(fields: [productID] , references: [id])
+    productID String
+}
+
+
+
+
+model Product {
+    id            String    @id @default(cuid())
     name      String
+    brandName  String
+    productDescription String
+    ProductDimension String	
+    ProductWeight String
+    image Image[] 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -56,12 +71,15 @@ model Session {
 model User {
     id            String    @id @default(cuid())
     name          String?
+    dateOfBirth   String?
     email         String?   @unique
     emailVerified DateTime?
+    password String
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
+    role    String @default("USER")
+    Product         Product[]
 }
 
 model VerificationToken {
