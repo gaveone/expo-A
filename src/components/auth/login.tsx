@@ -21,7 +21,8 @@ function Login() {
       console.log("Mutation error", error);
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Error", 
+        
         description: "An error occurred during login."
       });
     }
