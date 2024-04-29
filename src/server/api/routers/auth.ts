@@ -8,6 +8,12 @@ import {
 } from "@/server/api/trpc";
 
 export const authRouter = createTRPCRouter({
+    UserChecker:publicProcedure.input(z.object({email:z.string() ,password:z.string()}))
+    .mutation(async({ctx,input})=>{
+        console.log(input);
+        return"ffffffffffffffffffff"
+
+    }),
     makeNewUser:publicProcedure.input(z.object({
         name: z.string().min(1 ,{message:"This field has to be filled."}),
         dateOfBirth:z.string().min(1 ,{message:"This field has to be filled."}),
